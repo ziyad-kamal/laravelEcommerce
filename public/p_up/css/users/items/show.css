@@ -1,0 +1,148 @@
+
+.filter{
+    position: fixed;
+    border-right: 1px solid var(--main_color);
+    height: 100%;
+    width: 17%;
+}
+
+@media(max-width:992px){
+    .filter{
+        width: 23%;
+    }
+}
+
+@media(max-width:768px){
+    .filter{
+        display: none;
+        width  : 50%;
+        left: 25%;
+    }
+
+    .card{
+        left: 25%;
+    }
+}
+
+#more_items{
+    left: 30%;
+    margin-top: 50px;
+
+}
+
+@media(max-width:768px){
+    #more_items{
+        left: 0;
+    }
+}
+
+#filter_form{
+    margin-top: 50px;
+}
+
+@media(max-width:575px){
+    .card{
+        left: 10%;
+    }
+}
+
+@media(min-width:768px){
+    .filter{
+        display: block !important;
+    }
+}
+
+.card-img-top{
+    min-height: 227px;
+    max-height: 227px;
+    width     : 200px;
+}
+
+.image-item{
+    max-height: 210px;
+}
+
+.stars_outer{
+    position: relative;
+    display: inline-block;
+}
+
+.stars_outer::before{
+    content: '\f005 \f005 \f005 \f005 \f005';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    color: #ccc;
+}
+
+.stars_inner{
+    position: absolute;
+    top: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    width: 0;
+}
+
+.stars_inner::before{
+    content: '\f005 \f005 \f005 \f005 \f005';
+    font-family: 'Font Awesome 5 Free';
+    font-weight: 900;
+    color: rgba(248, 224, 9, 0.829);
+}
+
+.list-group-item{
+    position: relative;
+    height: 50px;
+    border-right: none;
+    border-left: none;
+}
+
+.list-group-item .price{
+    position: absolute;
+    bottom: 7px;
+    right: 19px;
+    font-weight: bold;
+    font-size: 23px;
+    color: var(--main_color);
+}
+
+.list-group-item .btn{
+    position: absolute;
+    width: 95%;
+    left: 7px;
+}
+
+.list-group-item .stars_wrapper{
+    position: absolute;
+    left: 19px;
+}
+
+h4 .name{
+    position: absolute;
+    left: 19px;
+}
+
+h4 .condition{
+    position: absolute;
+    font-weight: bold;
+    font-size: 23px;
+    right: 19px;
+    color: rgba(29,161,242,1.00);
+}
+
+.btn-success{
+    bottom: 5px;
+}
+
+#load img{
+    margin-left: 271px;
+}
+
+@media(max-width:768px){
+    #load img{
+        margin-left: 0;
+    }
+}
+
+.alert{
+    margin-top: 100px;
+}

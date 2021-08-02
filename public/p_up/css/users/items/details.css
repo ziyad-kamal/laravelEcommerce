@@ -1,0 +1,126 @@
+.card_item{
+    width: 36rem;
+    margin: auto;
+    margin-top: 110px;
+}
+
+@media(max-width:768px){
+    .card_item{
+        width: 17rem;
+    }
+}
+
+.status-details{
+    margin-right: 38px;
+    color       : #2ecc71;
+    font-weight : bold;
+}
+
+.price-details{
+    margin-right: 44px;
+    color       : #2ecc71;
+    font-weight : bold;
+}
+
+.date-details{
+    margin-right: 48px;
+    color       : #2ecc71;
+    font-weight : bold;
+}
+
+.name{
+    margin-right: 42px;
+    color       : #2ecc71;
+    font-weight : bold;
+}
+
+.description{
+    
+    color      : #2ecc71;
+    font-weight: bold;
+}
+
+.submit_comment{
+    width: 527px !important;
+}
+
+@media(max-width:768px){
+    .submit_comment{
+        width: 368px !important;
+    }
+}
+
+@media(max-width:578px){
+    .submit_comment{
+        width: 228px !important;
+    }
+}
+
+.user{
+    margin-right: 5px;
+}
+
+.comment{
+    margin-top: 19px;
+}
+
+.rounded-circle{
+    max-height: 50px;
+    width     : 50px;
+}
+
+.user-comment{
+    margin-top: 40px;
+}
+
+.users_comment{
+    position: relative;
+    left: 30px;
+    top: 5px;
+    margin-bottom: 5px;
+}
+
+.users_comment div{
+    max-width: 540px;
+    word-break: break-word;
+    margin-bottom: 5px;
+}
+
+@media(max-width:768px){
+    .users_comment div{
+        max-width: 377px;
+    }
+}
+
+@media(max-width:578px){
+    .users_comment div{
+        max-width: 237px;
+    }
+}
+
+.reset{
+    margin-left: 40px;
+}
+
+.rtl{
+    direction: rtl;
+}
+
+.date_com{
+    font-size  : small;
+    font-weight: 400;
+    margin-left: 20px;
+}
+
+img{
+    display: block;
+}
+
+.alert{
+    margin-top: 100px;
+}
+
+
+
+
+

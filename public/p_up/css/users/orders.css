@@ -1,0 +1,25 @@
+.table{
+    width: 90%;
+    position: relative;
+    left: 60px;
+}
+
+@media(max-width:568px){
+    .table{
+        left: 0;
+    }
+}
+
+@media(max-width:578px){
+    td img{
+        width: 100px;
+    }
+
+    .table{
+        left: -5%;
+    }
+}
+
+.alert{
+    margin-top: 100px;
+}

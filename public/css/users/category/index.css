@@ -1,0 +1,27 @@
+.table{
+    position: relative;
+    width: 90%;
+    margin-top: 105px;
+    left: 7%;
+}
+
+@media(max-width:776){
+    .table{
+        left: 4%;
+    }
+}
+
+@media(max-width:578px){
+    td img{
+        width: 134px;
+    }
+
+    .table{
+        left: -5%;
+    }
+}
+
+.alert{
+    margin-top: 100px;
+}
+
