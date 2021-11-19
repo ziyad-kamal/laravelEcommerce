@@ -3,30 +3,25 @@
 namespace App\Http\Controllers\users;
 
 use DB;
-use App\Models\Items;
-use App\Models\Brands;
-use App\Models\Orders;
-use App\Models\Review;
-use App\Traits\Search;
-use App\Models\Category;
-use App\Models\Comments;
-use App\Traits\UploadImage;
 use Illuminate\Http\Request;
 use App\Http\Requests\ItemRequest;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use App\Traits\FiltersRequests\FilterReqItems;
+use Illuminate\Support\Facades\{Auth,Redirect};
 use Cviebrock\EloquentSluggable\Services\SlugService;
-
+use App\Traits\{UploadImage,PaymentOrder,Search_filter};
+use App\Models\{Items,Brands,Orders,Review,Category,Comments};
 
 class ItemsController extends Controller
 {
     use UploadImage;
-    use Search;
+    use Search_filter;
+    use FilterReqItems;
+    use PaymentOrder;
 
     public function __construct()
     {
-        $this->middleware(['auth:web', 'verified'])->except('show', 'showResults');
+        $this->middleware(['auth:web','verified'])->except('show', 'showResults');
     }
 #########################################    index    ####################################
     public function index()
@@ -46,22 +41,18 @@ class ItemsController extends Controller
     public function create(ItemRequest $request)
     {
         try {
-            //import from traits uploadImage
-            $fileName = $this->uploadphoto($request, 'images/items');
+            //import from app/Traits/uploadImage
+            $file_name = $this->uploadphoto($request, 'images/items');
 
-            $name        = filter_var($request->get('name')       ,FILTER_SANITIZE_STRING);
-            $description = filter_var($request->get('description'),FILTER_SANITIZE_STRING);
-            $condition   = filter_var($request->get('condition')  ,FILTER_SANITIZE_STRING);
-            $price       = filter_var($request->get('price')      ,FILTER_SANITIZE_STRING);
-            $file_name   = filter_var($fileName                   ,FILTER_SANITIZE_STRING);
+            $fiterd_data=$this->filter_req_items($request,$file_name);
 
             Items::create([
-                'name'        => $name,
-                'slug'        => SlugService::createSlug(Items::class,'slug',$name),
-                'description' => $description,
-                'condition'   => $condition,
-                'price'       => $price,
-                'photo'       => $file_name,
+                'name'        => $fiterd_data['name'] ,
+                'slug'        => SlugService::createSlug(Items::class,'slug',$fiterd_data['name'] ),
+                'description' => $fiterd_data['description'],
+                'condition'   => $fiterd_data['condition'],
+                'price'       => $fiterd_data['price'],
+                'photo'       => $fiterd_data['file_name'],
                 'date'        => now(),
                 'users_id'    => Auth::user()->id,
                 'category_id' => $request->get('category_id'),
@@ -80,49 +71,15 @@ class ItemsController extends Controller
     public function show(Request $request)
     {
         try {
-            //import from trait (search)
             $search            = $this->search($request);
             $price             = $request->has('price') ? $request->get('price') : null;
             $selected_category = $request->has('category') ? $request->get('category') : null;
             $selected_brands   = $request->has('brands') ? $request->get('brands') : [];
 
-            $items    = Items::with(['category','brands']);
+            $items=$this->filter_data($price,$selected_category,$selected_brands,$search);
+
             $category = Category::where('translation_lang',defaultLang())->get();
             $brands   = Brands::all();
-
-            if ($search != null) {
-                $items = $items->search($search);
-            }
-
-            if ($selected_category != null) {
-                $items = $items->where('category_id', $selected_category);
-            }
-
-            if ($price != null) {
-                $items = $items->when($price, function ($q) use ($price) {
-                    if ($price == "price_0_500") {
-                        $q->whereBetween('price', [0, 500]);
-                    }
-
-                    if ($price == "price_501_1500") {
-                        $q->whereBetween('price', [501, 1500]);
-                    }
-
-                    if ($price == "price_1501_3000") {
-                        $q->whereBetween('price', [1501, 3000]);
-                    }
-
-                    if ($price == "price_3001_5000") {
-                        $q->whereBetween('price', [3001, 5000]);
-                    }
-                });
-            }
-
-            if(count($selected_brands) > 0){
-                $items=Items::whereIn('brand_id',$selected_brands);
-            }
-
-            $items = $items->orderBy('id','desc')->paginate(2);
 
             if ($request->has('agax')) {
                 $view = view('users.items.allItems', compact('items'))->render();
@@ -139,38 +96,24 @@ class ItemsController extends Controller
     }
 
 #########################################      show item details      ####################################
-    public function showDetails($slug, Request $request)
+    public function showDetails(string $slug, Request $request)
     {
         try {
             $item    = Items::where('slug',$slug)->first();
-            $item_id = $item->id;
-
             if(!$item){
                 return Redirect::to('items/get')->with(['error'=>'Something went wrong']);
             }
 
-            $comments = Comments::with('users')->where('item_id', $item_id)
+            $comments = Comments::with('users')->where('item_id', $item->id)
                     ->orderBy('id','desc')->paginate(3);
             
-            if (request('id') && request('resourcePath')) {
-                $payment_status = $this->getPaymentStatus(request('id'), request('resourcePath'));
-                if (isset($payment_status['id'])) {
-                    Orders::create([
-                        'item_id'             => $item_id,
-                        'bank_transaction_id' => $payment_status['id'],
-                        'user_id'             => Auth::user()->id,
-                        'total_amount'        => $item->price,
-                    ]);
-    
-                    $msg='the operation is finished successfully';
-                    return view('users.items.details', compact('item', 'comments','msg'));
-                } else {
-                    $error='the operation is failed';
-                    return view('users.items.details', compact('item', 'comments','error'));
-                }
-    
+            $resourcePath=request('resourcePath');
+            if ($resourcePath) {
+                $url=$this->generateUrl($resourcePath);
+                
+                $this->paymentOrder($item,$comments,$url);
             }
-            
+
             if ($request->has('agax')) {
                 $view = view('users.items.comments', compact('comments'))->render();
                 return response()->json(['html' => $view]);
@@ -184,62 +127,21 @@ class ItemsController extends Controller
         
     }
 
-#########################################       payment status      ####################################
-    public function getPaymentStatus($id,$resourcePath)
-    {
-        try {
-            $url = "https://test.oppwa.com/";
-            $url .=$resourcePath;
-            $url .= "?entityId=8a8294174b7ecb28014b9699220015ca";
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Authorization:Bearer OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8c3k2S0pzVDg='));
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // this should be set to true in production
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $responseData = curl_exec($ch);
-            if (curl_errno($ch)) {
-                return curl_error($ch);
-            }
-            curl_close($ch);
-
-            return json_decode($responseData , true) ;
-
-        } catch (\Exception $th) {
-            return redirect()->back()->with(['error'=>'Something went wrong']);
-        }
-        
-    }
-
 #########################################      get checkout      ####################################
     public function getCheckout(Request $request)
     {
         try {
-            $url = "https://test.oppwa.com/v1/checkouts";
+            $url  = "https://test.oppwa.com/v1/checkouts";
             $data = "entityId=8a8294174b7ecb28014b9699220015ca" .
                     "&amount=" . $request->price .
                     "&currency=EUR" .
                     "&paymentType=DB";
     
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'Authorization:Bearer OGE4Mjk0MTc0YjdlY2IyODAxNGI5Njk5MjIwMDE1Y2N8c3k2S0pzVDg='));
-            curl_setopt($ch, CURLOPT_POST, 1);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false); // this should be set to true in production
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            $responseData = curl_exec($ch);
-            if (curl_errno($ch)) {
-                return curl_error($ch);
-            }
-            curl_close($ch);
-            $res=json_decode($responseData,true);
-            $item_id=$request->item_id;
+            $res=$this->getPaymentStatus($url,$data);
+            
+            $item_slug=$request->item_slug;
     
-            $view=view('users.items.checkout',compact('res','item_id'))->render();
+            $view=view('users.items.checkout',compact('res','item_slug'))->render();
     
             return response()->json(['form'=>$view]);
         } catch (\Exception $th) {
@@ -293,28 +195,24 @@ class ItemsController extends Controller
         try {
             if ($request->file('photo')) {
                 //import from traits uploadImage
-                $fileName = $this->uploadphoto($request, 'images/items');
+                $file_name = $this->uploadphoto($request, 'images/items');
             } else {
-                $fileName = $request->get('filename');
+                $file_name = $request->get('filename');
             }
 
-            $name        = filter_var($request->get('name')       ,FILTER_SANITIZE_STRING);
-            $description = filter_var($request->get('description'),FILTER_SANITIZE_STRING);
-            $condition   = filter_var($request->get('condition')  ,FILTER_SANITIZE_STRING);
-            $price       = filter_var($request->get('price')      ,FILTER_SANITIZE_STRING);
-            $file_name   = filter_var($fileName                   ,FILTER_SANITIZE_STRING);
+            $fiterd_data=$this->filter_req_items($request,$file_name);
 
             $item              = Items::find($request->id);
             if(! $item){
                 return response()->json(['error'=>'item not found'],404);
             }
 
-            $item->name        = $name;
-            $item->description = $description;
-            $item->condition   = $condition;
-            $item->price       = $price;
+            $item->name        = $fiterd_data['name'];
+            $item->description = $fiterd_data['description'];
+            $item->condition   = $fiterd_data['condition'];
+            $item->price       = $fiterd_data['price'];
             $item->category_id = $request->get('category_id');
-            $item->photo       = $file_name;
+            $item->photo       = $fiterd_data['file_name'];
 
             $item->save();
 
@@ -328,7 +226,7 @@ class ItemsController extends Controller
 #########################################      show search results       ####################################
     public function showResults(Request $request)
     {
-        //try {
+        try {
             //import from trait (search)
             $search = $this->search($request);
             if ($search != null) {
@@ -341,9 +239,9 @@ class ItemsController extends Controller
 
             return response()->json(compact('items', 'search', 'user_auth'));
 
-        //} catch (\Exception $th) {
+        } catch (\Exception $th) {
             return response()->json(['error'=>'something went wrong'],500); 
-        //}
+        }
     }
 
 #########################################        rate        ####################################
@@ -389,11 +287,5 @@ class ItemsController extends Controller
             DB::rollBack();
             return redirect()->back()->with(['error'=>'something went wrong']);
         }
-        
-    }
-
-    public function getRate()
-    {
-        
     }
 }

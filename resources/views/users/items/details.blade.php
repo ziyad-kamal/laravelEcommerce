@@ -172,7 +172,7 @@
             url     : "{{url('items/get/checkout')}}",
             data    : {
                 'price'  : "{{$item->price}}",
-                'item_id': "{{$item->id}}"
+                'item_slug': "{{$item->slug}}"
             },
             success: function (response,status) {
                 if(status == 'success'){

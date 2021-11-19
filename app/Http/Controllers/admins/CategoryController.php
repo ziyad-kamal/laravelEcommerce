@@ -8,7 +8,6 @@ use DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 
-
 class CategoryController extends Controller
 {
     ##############################      index       #####################################

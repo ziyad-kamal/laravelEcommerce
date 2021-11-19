@@ -2,8 +2,12 @@
 
 namespace App\Traits;
 
-trait UploadImage{
-    public function uploadphoto($request,$path){
+use Illuminate\Http\Request;
+
+trait UploadImage
+{
+    public function uploadphoto(Request $request,string $path):string
+    {
         $file     = $request->file('photo');
         $fileName = time() . '-' . $file-> getClientOriginalName();
         

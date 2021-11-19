@@ -47,15 +47,15 @@
         </div>
     </div>
     @if (isset($category->categories))
-    <ul class="nav nav-tabs" id="myTab" role="tablist">
-        @foreach ($category->categories as $i => $lang)
-        <li class="nav-item" role="presentation">
-            <a class="nav-link " id="profile-tab{{$i}}" data-toggle="tab" href="#profile{{$i}}" 
-            role="tab" aria-controls="{{$i}}" aria-selected="false">
-            edit category({{ __('titles.' . $lang->translation_lang) }})</a>
-        </li>
-        @endforeach
-    </ul>
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            @foreach ($category->categories as $i => $lang)
+            <li class="nav-item" role="presentation">
+                <a class="nav-link " id="profile-tab{{$i}}" data-toggle="tab" href="#profile{{$i}}" 
+                role="tab" aria-controls="{{$i}}" aria-selected="false">
+                edit category({{ __('titles.' . $lang->translation_lang) }})</a>
+            </li>
+            @endforeach
+        </ul>
     @endif
     @if (isset($category->categories))
     <div class="tab-content" id="myTabContent">
