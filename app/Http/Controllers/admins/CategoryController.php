@@ -7,9 +7,13 @@ use App\Models\Language;
 use DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
+use App\Traits\FiltersRequests\FilterReqCategory;
+use App\Traits\GetDefault;
 
 class CategoryController extends Controller
 {
+    use GetDefault;
+    use FilterReqCategory;
     ##############################      index       #####################################
     public function index(){
         //autoload from app\helpers\general
@@ -29,39 +33,30 @@ class CategoryController extends Controller
         try{
             DB::beginTransaction();
 
-            $category=collect($request->category);
-            $filter=$category->filter(function($val){
-                //defaultLang() autoload from app\helpers\general
-                return $val['abbr'] == defaultLang();
-            });
+            $category=$request->category;
+            $defualt_category=$this->getDefault($category);
 
-            $defualt_category=array_values($filter->all())[0];
-
-            $name        = filter_var($defualt_category['name']           ,FILTER_SANITIZE_STRING);
-            $description = filter_var($defualt_category['description']    ,FILTER_SANITIZE_STRING);
+            $filterd_data=$this->filter_req_category($defualt_category);
 
             $defualt_category_id=Category::insertGetId([
                 'translation_lang' => $defualt_category['abbr'],
                 'translation_of'   => 0,
-                'name'             => $name,
-                'description'      => $description,
+                'name'             => $filterd_data['name'],
+                'description'      => $filterd_data['description'],
             ]);
     
-            $otherCategories=$category->filter(function($val){
-                return $val['abbr'] != defaultLang();
-            });
+            $otherCategories=$this->getOther($category);
     
             if(isset($otherCategories)){
                 $otherCategories_arr=[];
                 foreach($otherCategories as $othercategory){
-                    $name        = filter_var($othercategory['name']           ,FILTER_SANITIZE_STRING);
-                    $description = filter_var($othercategory['description']    ,FILTER_SANITIZE_STRING);
+                    $filterd_data=$this->filter_req_category($othercategory);
 
                     $otherCategories_arr[]=[
                         'translation_lang' => $othercategory['abbr'],
                         'translation_of'   => $defualt_category_id,
-                        'name'             => $name,
-                        'description'      => $description,
+                        'name'             => $filterd_data['name'],
+                        'description'      => $filterd_data['description'],
                     ];
                 }
                 
@@ -104,12 +99,11 @@ class CategoryController extends Controller
             return redirect()->back()->with(['error'=>__("messages.this category isn't found")]);
         }
 
-        $name        = filter_var($main_category['name']           ,FILTER_SANITIZE_STRING);
-        $description = filter_var($main_category['description']    ,FILTER_SANITIZE_STRING);
+        $filterd_data=$this->filter_req_category($main_category);
 
         Category::where('id',$id)->update([
-            'name'        => $name,
-            'description' => $description,
+            'name'        => $filterd_data['name'],
+            'description' => $filterd_data['description'],
         ]);
 
         return redirect()->back()->with(['success'=>__('messages.you updated category successfully')]);
@@ -129,16 +123,15 @@ class CategoryController extends Controller
     public function addNewlang(CategoryRequest $request)
     {
         try {
-            $category=collect($request->category);
+            $category=(array)$request->category;
             
-            $name        = filter_var($category[0]['name']           ,FILTER_SANITIZE_STRING);
-            $description = filter_var($category[0]['description']    ,FILTER_SANITIZE_STRING);
+            $filterd_data=$this->filter_req_category($category);
 
             Category::create([
                 'translation_lang' => $category[0]['translation_lang'],
                 'translation_of'   => $category[0]['category_id'],
-                'name'             => $name,
-                'description'      => $description,
+                'name'             => $filterd_data['name'],
+                'description'      => $filterd_data['description'],
             ]);
     
             return redirect()->back()->with(['success'=>'you added successfully new language for this category']);
