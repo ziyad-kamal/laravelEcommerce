@@ -3,10 +3,8 @@
 namespace App\Http\Controllers\users;
 
 use App\Models\Orders;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\{Auth,Redirect};
 
 class OrdersController extends Controller
 {

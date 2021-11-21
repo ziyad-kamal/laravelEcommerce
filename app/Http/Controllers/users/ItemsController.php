@@ -14,10 +14,7 @@ use App\Models\{Items,Brands,Orders,Review,Category,Comments};
 
 class ItemsController extends Controller
 {
-    use UploadImage;
-    use Search_filter;
-    use FilterReqItems;
-    use PaymentOrder;
+    use UploadImage ,PaymentOrder ,FilterReqItems, Search_filter;
 
     public function __construct()
     {

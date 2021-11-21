@@ -6,16 +6,13 @@ use App\User;
 use App\Models\Category;
 use App\Traits\UploadImage;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\{Auth,Redirect,Hash};
 use App\Http\Requests\ProfileRequest;
 use App\Traits\FiltersRequests\FilterReqProfile;
-use Illuminate\Support\Facades\Redirect;
 
 class ProfileController extends Controller
 {
-    use UploadImage;
-    use FilterReqProfile;
+    use UploadImage ,FilterReqProfile;
 
     public function __construct()
     {

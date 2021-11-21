@@ -4,10 +4,9 @@ namespace App\Http\Controllers\users;
 
 use App\Models\Comments;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\{Auth,Redirect};
 use App\Http\Requests\CommentRequest;
 use App\Traits\FiltersRequests\FilterReqComment;
-use Illuminate\Support\Facades\Redirect;
 
 class CommentController extends Controller
 {
@@ -18,7 +17,8 @@ class CommentController extends Controller
         $this->middleware(['auth:web','verified']);
     }
 ####################################      create          #################################
-    public function create(CommentRequest $request,int $id){
+    public function create(CommentRequest $request,int $id)
+    {
         try {
             $filtered_data=$this->filter_req_comment($request);
 
@@ -37,7 +37,8 @@ class CommentController extends Controller
     }
 
 ####################################      edit          #################################
-    public function edit(int $id){
+    public function edit(int $id)
+    {
         try {
             $comment=Comments::where(['id'=>$id,'user_id'=>Auth::id()]);
             if(!$comment){
@@ -53,7 +54,8 @@ class CommentController extends Controller
     }
 
 ####################################      update          #################################
-    public function update(CommentRequest $request,int $id){
+    public function update(CommentRequest $request,int $id)
+    {
         try {
             $comment=Comments::where(['id'=>$id,'user_id'=>Auth::id()]);
             if(! $comment){
@@ -74,7 +76,8 @@ class CommentController extends Controller
 
 
 ####################################      delete          #################################
-    public function delete(int $id){
+    public function delete(int $id)
+    {
         try {
             $comment=Comments::where(['id'=>$id,'user_id'=>Auth::id()]);
             if(! $comment){

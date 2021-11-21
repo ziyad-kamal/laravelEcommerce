@@ -4,16 +4,17 @@ namespace App\Http\Controllers\admins;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\{Auth,Redirect};
 
 class AdminsController extends Controller
 {
-    public function getLogin(){
+    public function getLogin()
+    {
         return view('admins.auth.login');
     }
 
-    public function login(Request $request){
+    public function login(Request $request)
+    {
         $credentials=$request->only('email','password');
 
         if(auth()->guard('admins')->attempt($credentials)){
@@ -23,7 +24,8 @@ class AdminsController extends Controller
         }
     }
 
-    public function getDashboard(){
+    public function getDashboard()
+    {
         return view('admins.auth.dashboard');
     }
 

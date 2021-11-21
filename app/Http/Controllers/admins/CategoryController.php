@@ -2,8 +2,7 @@
 
 namespace App\Http\Controllers\admins;
 
-use App\Models\Category;
-use App\Models\Language;
+use App\Models\{Category,Language};
 use DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
@@ -12,8 +11,7 @@ use App\Traits\GetDefault;
 
 class CategoryController extends Controller
 {
-    use GetDefault;
-    use FilterReqCategory;
+    use GetDefault ,FilterReqCategory;
     ##############################      index       #####################################
     public function index()
     {
