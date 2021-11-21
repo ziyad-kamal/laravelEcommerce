@@ -5,30 +5,39 @@ namespace App\Http\Controllers\admins;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Languagerequest;
 use App\Models\Language;
-use Illuminate\Http\Request;
+use App\Traits\FiltersRequests\FilterReqLang;
 
 class LanguageController extends Controller
 {
-    public function index(){
-        $language=Language::selection()->get();
-        return view('admins.language.show',compact('language'));
+    use FilterReqLang;
+    ##############################      index    #####################################
+    public function index()
+    {
+        try {
+            $language=Language::selection()->get();
+            return view('admins.language.show',compact('language'));
+        } catch (\Exception $th) {
+            return redirect()->back()->with(['error'=>'something went wrong']);
+        }
+        
     }
 
-    public function create(){
-        
+    ##############################      create     #####################################
+    public function create()
+    {
         return view('admins.language.create');
     }
 
-    public function store(Languagerequest $request){
+    ##############################      store     #####################################
+    public function store(Languagerequest $request)
+    {
         try {
-            $name      = filter_var($request->get('name')        ,FILTER_SANITIZE_STRING);
-            $abbr      = filter_var($request->get('abbr')        ,FILTER_SANITIZE_STRING);
-            $direction = filter_var($request->get('direction')   ,FILTER_SANITIZE_STRING);
-    
+            $filtered_data=$this->filter_req_lang($request);
+            
             Language::create([
-                'name'      => $name,
-                'abbr'      => $abbr,
-                'direction' => $direction,
+                'name'      => $filtered_data['name'],
+                'abbr'      => $filtered_data['abbr'],
+                'direction' => $filtered_data['direction'],
             ]);
     
             return redirect()->back()->with(['success'=>'you created category successfully']);

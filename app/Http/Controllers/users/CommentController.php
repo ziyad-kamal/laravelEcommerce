@@ -6,23 +6,24 @@ use App\Models\Comments;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CommentRequest;
+use App\Traits\FiltersRequests\FilterReqComment;
 use Illuminate\Support\Facades\Redirect;
-
 
 class CommentController extends Controller
 {
+    use FilterReqComment;
 
     public function __construct()
     {
         $this->middleware(['auth:web','verified']);
     }
 ####################################      create          #################################
-    public function create(CommentRequest $request,$id){
+    public function create(CommentRequest $request,int $id){
         try {
-            $comment     = filter_var($request->get('comment') , FILTER_SANITIZE_STRING);
+            $filtered_data=$this->filter_req_comment($request);
 
             Comments::create([
-                'comment'     => $comment,
+                'comment'     => $filtered_data['comment'],
                 'user_id'     => Auth::user()->id,
                 'item_id'     => $id
             ]);
@@ -36,9 +37,9 @@ class CommentController extends Controller
     }
 
 ####################################      edit          #################################
-    public function edit($id){
+    public function edit(int $id){
         try {
-            $comment=Comments::find($id);
+            $comment=Comments::where(['id'=>$id,'user_id'=>Auth::id()]);
             if(!$comment){
                 return redirect()->back()->with(['error'=>'no comment found']);
             }
@@ -52,16 +53,16 @@ class CommentController extends Controller
     }
 
 ####################################      update          #################################
-    public function update(CommentRequest $request,$id){
+    public function update(CommentRequest $request,int $id){
         try {
-            $comment=Comments::find($id);
+            $comment=Comments::where(['id'=>$id,'user_id'=>Auth::id()]);
             if(! $comment){
                 return redirect()->back()->with(['error'=>'no comment found']);
             }
 
-            $comment  = filter_var($request->get('comment') , FILTER_SANITIZE_STRING);
+            $filtered_data=$this->filter_req_comment($request);
 
-            $comment->comment  = $comment;
+            $comment->comment  = $filtered_data['comment'];
             $comment->save();
                 
             return redirect()->back()->with(['success'=>'you updated comment successfully']);
@@ -73,9 +74,9 @@ class CommentController extends Controller
 
 
 ####################################      delete          #################################
-    public function delete($id){
+    public function delete(int $id){
         try {
-            $comment=Comments::find($id);
+            $comment=Comments::where(['id'=>$id,'user_id'=>Auth::id()]);
             if(! $comment){
                 return redirect()->back()->with(['error'=>'no comment found']);
             }

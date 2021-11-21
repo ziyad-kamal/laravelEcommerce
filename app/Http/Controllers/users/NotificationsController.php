@@ -18,7 +18,7 @@ class NotificationsController extends Controller
 ####################################      show          #################################
     public function show()
     {
-        //try {
+        try {
             $user_id                  = Auth::user()->id;
             $items_id                 = $this->auth_items_id();
             $notifications_not_readed = $this->notifications_not_readed($user_id);
@@ -32,9 +32,9 @@ class NotificationsController extends Controller
             
             return response()->json(compact('notifications_not_readed_count','view'));
 
-        //} catch (\Exception $th) {
+        } catch (\Exception $th) {
             return response()->json(['error'=>'something went wrong'],500);
-        //}
+        }
         
     }
 
