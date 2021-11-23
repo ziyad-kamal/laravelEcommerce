@@ -3,6 +3,7 @@
 namespace App\Traits;
 
 use App\Models\Comments;
+use Illuminate\Database\Eloquent\Collection;
 
 trait Notifications
 {
@@ -13,7 +14,7 @@ trait Notifications
         return $items_id;
     }
 
-    public function notifications_not_readed(int $user_id)
+    public function notifications_not_readed(int $user_id):Collection
     {
         $items_id                 = $this->auth_items_id();
         $notifications_not_readed = Comments::whereIn('item_id',$items_id)

@@ -5,21 +5,23 @@ namespace App\Traits;
 use App\Models\Items;
 use App\Models\Orders;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\View\View;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 trait PaymentOrder
 {
-    public function paymentOrder(Items $item,$comments,string $url)
+    public function paymentOrder(Items $item,LengthAwarePaginator $comments,string $url):View
     {
         $payment_status = $this->getPaymentStatus($url);
         
         if (isset($payment_status['id'])) {
-            $orser=Orders::create([
+            Orders::create([
                 'item_id'             => $item->id,
                 'bank_transaction_id' => $payment_status['id'],
                 'user_id'             => Auth::user()->id,
                 'total_amount'        => $item->price,
             ]);
-            return $orser;
+            
             $msg='the operation is finished successfully';
             return view('users.items.details', compact('item', 'comments','msg'));
         }else{
@@ -28,7 +30,7 @@ trait PaymentOrder
         } 
     }
 
-    public function getPaymentStatus(string $url,$data=null)
+    public function getPaymentStatus(string $url,$data=null):array
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);

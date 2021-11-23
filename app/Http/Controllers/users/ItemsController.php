@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers\users;
 
-use DB;
-use Illuminate\Http\Request;
 use App\Http\Requests\ItemRequest;
 use App\Http\Controllers\Controller;
 use App\Traits\FiltersRequests\FilterReqItems;
-use Illuminate\Support\Facades\{Auth,Redirect};
+use Illuminate\Support\Facades\{Auth,DB};
 use Cviebrock\EloquentSluggable\Services\SlugService;
 use App\Traits\{UploadImage,PaymentOrder,Search_filter};
 use App\Models\{Items,Brands,Orders,Review,Category,Comments};
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\{RedirectResponse,JsonResponse,Request};
 
 class ItemsController extends Controller
 {
@@ -21,7 +21,7 @@ class ItemsController extends Controller
         $this->middleware(['auth:web','verified'])->except('show', 'showResults');
     }
 #########################################    index    ####################################
-    public function index()
+    public function index():View|RedirectResponse
     {
         try {
             $categories = Category::where('translation_lang',defaultLang())->get();
@@ -29,13 +29,13 @@ class ItemsController extends Controller
             return view('users.items.create', compact('categories','brands'));
 
         } catch (\Exception $ex) {
-            return Redirect::to('items/get')->with(['error'=>'something went wrong']);
+            return redirect('items/get')->with(['error'=>'something went wrong']);
         }
         
     }
 
 #########################################    create    ####################################
-    public function create(ItemRequest $request)
+    public function create(ItemRequest $request):RedirectResponse
     {
         try {
             //import from app/Traits/uploadImage
@@ -56,7 +56,7 @@ class ItemsController extends Controller
                 'brand_id'    => $request->get('brand_id'),
             ]);
 
-            return Redirect::to('items/create')->with(['success' => 'you created item successfully']);
+            return redirect('items/create')->with(['success' => 'you created item successfully']);
 
         } catch (\Exception $th) {
             return redirect()->back()->with(['error'=>'Something went wrong']);
@@ -65,7 +65,7 @@ class ItemsController extends Controller
     }
 
 #########################################      show items     ####################################
-    public function show(Request $request)
+    public function show(Request $request):View|RedirectResponse|JsonResponse
     {
         try {
             $search            = $this->search($request);
@@ -93,12 +93,15 @@ class ItemsController extends Controller
     }
 
 #########################################      show item details      ####################################
-    public function showDetails(string $slug, Request $request)
+/**
+ * @return 
+ */
+    public function showDetails(string $slug, Request $request):View|RedirectResponse|JsonResponse
     {
         try {
             $item    = Items::where('slug',$slug)->first();
             if(!$item){
-                return Redirect::to('items/get')->with(['error'=>'Something went wrong']);
+                return redirect('items/get')->with(['error'=>'Something went wrong']);
             }
 
             $comments = Comments::with('users')->where('item_id', $item->id)
@@ -119,13 +122,13 @@ class ItemsController extends Controller
             return view('users.items.details', compact('item', 'comments'));
 
         } catch (\Exception $th) {
-            return Redirect::to('items/get')->with(['error'=>'something went wrong']);
+            return redirect('items/get')->with(['error'=>'something went wrong']);
         }
         
     }
 
 #########################################      get checkout      ####################################
-    public function getCheckout(Request $request)
+    public function getCheckout(Request $request):JsonResponse
     {
         try {
             $url  = "https://test.oppwa.com/v1/checkouts";
@@ -142,13 +145,13 @@ class ItemsController extends Controller
     
             return response()->json(['form'=>$view]);
         } catch (\Exception $th) {
-            return Redirect::to('items/get')->with(['error'=>'something went wrong']);
+            return response()->json(['error'=>'something went wrong']);
         }
         
     }
 
 #########################################     delete      ####################################
-    public function deleteItem(Request $request)
+    public function deleteItem(Request $request):JsonResponse
     {
         try {
             $item_id = $request->id;
@@ -170,7 +173,7 @@ class ItemsController extends Controller
     }
 
 #########################################      edit       ####################################
-    public function editItem(Request $request)
+    public function editItem(Request $request):JsonResponse
     {
         try {
             $item = Items::find($request->id);
@@ -187,7 +190,7 @@ class ItemsController extends Controller
     }
 
 #########################################      update       ####################################
-    public function update(ItemRequest $request)
+    public function update(ItemRequest $request):JsonResponse
     {
         try {
             if ($request->file('photo')) {
@@ -221,7 +224,7 @@ class ItemsController extends Controller
     }
 
 #########################################      show search results       ####################################
-    public function showResults(Request $request)
+    public function showResults(Request $request):JsonResponse
     {
         try {
             //import from trait (search)
@@ -242,7 +245,7 @@ class ItemsController extends Controller
     }
 
 #########################################        rate        ####################################
-    public function rate(Request $request)
+    public function rate(Request $request):RedirectResponse
     {
         try {
             DB::beginTransaction();
@@ -250,7 +253,7 @@ class ItemsController extends Controller
             $item_id      = $request->item_id;
             $item         = Items::find($item_id);
             if(! $item){
-                return Redirect::to('orders/show')->with(['error'=>'item not found']);
+                return redirect('orders/show')->with(['error'=>'item not found']);
             }
 
             $item_rate    = $item->rate;
@@ -270,7 +273,7 @@ class ItemsController extends Controller
 
             $order=Orders::find($request->order_id);
             if(! $order){
-                return Redirect::to('orders/show')->with(['error'=>'order not found']);
+                return redirect('orders/show')->with(['error'=>'order not found']);
             }
             
             $order->rating=1;
@@ -278,7 +281,7 @@ class ItemsController extends Controller
 
             DB::commit();
 
-            return Redirect::to('orders/show')->with(['success'=>'thank you for review']);
+            return redirect('orders/show')->with(['success'=>'thank you for review']);
 
         } catch (\Exception $th) {
             DB::rollBack();

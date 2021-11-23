@@ -40,7 +40,7 @@ class CommentController extends Controller
     public function edit(int $id)
     {
         try {
-            $comment=Comments::where(['id'=>$id,'user_id'=>Auth::id()]);
+            $comment=Comments::where(['id'=>$id,'user_id'=>Auth::id()])->first();
             if(!$comment){
                 return redirect()->back()->with(['error'=>'no comment found']);
             }
@@ -57,7 +57,7 @@ class CommentController extends Controller
     public function update(CommentRequest $request,int $id)
     {
         try {
-            $comment=Comments::where(['id'=>$id,'user_id'=>Auth::id()]);
+            $comment=Comments::where(['id'=>$id,'user_id'=>Auth::id()])->first();
             if(! $comment){
                 return redirect()->back()->with(['error'=>'no comment found']);
             }
@@ -79,7 +79,7 @@ class CommentController extends Controller
     public function delete(int $id)
     {
         try {
-            $comment=Comments::where(['id'=>$id,'user_id'=>Auth::id()]);
+            $comment=Comments::where(['id'=>$id,'user_id'=>Auth::id()])->first();
             if(! $comment){
                 return redirect()->back()->with(['error'=>'no comment found']);
             }

@@ -4,16 +4,17 @@ namespace App\Traits;
 
 use App\Models\Items;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 trait Search_filter
 {
-    public function search(Request $request):string
+    public function search(Request $request):null|string
     {
         $search=$request->has('search')  ? $request->get('search')   :null;
         return $search;
     }
 
-    public function filter_data(string $price=null,int $selected_category=null,array $selected_brands=[],string $search=null)
+    public function filter_data(string $price=null,int $selected_category=null,array $selected_brands=[],string $search=null):LengthAwarePaginator
     {
         $items    = Items::with(['category','brands']);
 
