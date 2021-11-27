@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\admins;
 
 use App\Models\{Category,Language};
-use DB;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\CategoryRequest;
 use App\Traits\FiltersRequests\FilterReqCategory;

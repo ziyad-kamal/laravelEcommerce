@@ -16,9 +16,12 @@ class AdminsController extends Controller
     public function login(Request $request)
     {
         $credentials=$request->only('email','password');
-
-        if(auth()->guard('admins')->attempt($credentials)){
-            return Redirect::to('admins/dashboard');
+        $auth = Auth::guard('admin');
+        
+        if ($auth instanceof \Illuminate\Contracts\Auth\StatefulGuard){
+            if ($auth->attempt($credentials)) {
+                return Redirect::to('admins/dashboard');
+            } 
         }else{
             return Redirect::to('admins/get/login')->with(['error'=>'incorrect password or email']);
         }

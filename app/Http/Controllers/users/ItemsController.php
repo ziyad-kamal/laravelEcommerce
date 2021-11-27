@@ -256,12 +256,14 @@ class ItemsController extends Controller
                 return redirect('orders/show')->with(['error'=>'item not found']);
             }
 
-            $item_rate    = $item->rate;
-            $rate_count   = Review::where('item_id',$item_id)->count();
-            $request_rate = $request->rate;
+            $request_rate = (int)$request->rate;
 
-            $new_rate=(($item_rate * $rate_count) + $request_rate) / ($rate_count + 1);
-
+            $old_rates=Review::where('item_id',$item_id)->pluck('rate')->toArray();
+            
+            array_push($old_rates,$request_rate);
+            
+            $new_rate=collect($old_rates)->avg();
+            
             $item->rate=$new_rate;
             $item->save();
 
