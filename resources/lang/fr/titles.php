@@ -7,7 +7,7 @@ return[
     'fr'           => 'in en français',
     'home'         => 'domicile',
     'languages'    => 'langues',
-    'profile'      => 'profil',
+    'admins'       => 'admino',
     'orders'       => 'orders',
     'categories'   => 'catégories',
     'items'        => 'items',

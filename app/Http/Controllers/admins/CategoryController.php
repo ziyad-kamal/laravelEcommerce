@@ -18,14 +18,14 @@ class CategoryController extends Controller
         //autoload from app\helpers\general
         $defualt=defaultLang();
         $category=Category::where('translation_lang',$defualt)->selection()->get();
-        return view('admins.adminCategory.show',compact('category'));
+        return view('admins.category.show',compact('category'));
     }
 
     ##############################      create       #####################################
     public function create()
     {
         $language=Language::selection()->get();
-        return view('admins.adminCategory.create',compact('language'));
+        return view('admins.category.create',compact('language'));
     }
 
     ##############################      store        #####################################
@@ -89,7 +89,7 @@ class CategoryController extends Controller
 
         $lang_diff=array_diff($all_lang , $not_default_cate_lang);
 
-        return view('admins.adminCategory.edit',compact('category','lang_diff'));
+        return view('admins.category.edit',compact('category','lang_diff'));
     }
 
     ##############################      update       #####################################

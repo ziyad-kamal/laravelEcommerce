@@ -6,7 +6,7 @@ return[
     'fr'           => 'in french',
     'home'         => 'home',
     'languages'    => 'languages',
-    'profile'      => 'profile',
+    'admins'      => 'admins',
     'orders'       => 'orders',
     'categories'   => 'categories',
     'items'        => 'items',

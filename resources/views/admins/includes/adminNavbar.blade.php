@@ -32,14 +32,14 @@
             <ul class="navbar-nav mr-auto">
                 @auth
                     <li class="nav-item">
-                        <a class="nav-link mid-link" href="{{ route('profile.get') }}">
-                            {{ __('titles.profile') }}
+                        <a class="nav-link mid-link" href="{{ url('admins/show') }}">
+                            {{ __('titles.admins') }}
                         </a>
                     </li>
                 @endauth
 
                 <li class="nav-item">
-                    <a class="nav-link mid-link" href="{{ route('item.get') }}">
+                    <a class="nav-link mid-link" href="{{ url('admins/items/show') }}">
                         {{ __('titles.items') }}
                     </a>
                 </li>

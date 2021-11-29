@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 
 trait FilterReqItems
 {
-    public function filter_req_items(Request $request,string $file_name):array
+    public function filter_req_items(Request $request,string $file_name=null):array
     {
         $name        = filter_var($request->name        ,FILTER_SANITIZE_STRING);
         $description = filter_var($request->description ,FILTER_SANITIZE_STRING);
