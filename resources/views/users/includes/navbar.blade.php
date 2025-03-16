@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light ">
+<nav class="navbar navbar-expand-lg navbar-light " style="z-index: 1001">
     <div class="container">
         <i class="fas fa-align-left"></i>
             <a class="navbar-brand" href="{{url('/')}}">eCommerce</a>

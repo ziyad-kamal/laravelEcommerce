@@ -15,7 +15,7 @@ class CategoryController extends Controller
             return view('users.category.index',compact('categories'));
 
         } catch (\Exception $ex) {
-            return Redirect::to('category/get')->with(['error'=>'something went wrong']);
+            return Redirect::to('/')->with(['error'=>'something went wrong']);
         }
     }
 

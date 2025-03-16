@@ -22,7 +22,7 @@
 
                                 <div class="col-md-6">
                                     <input id="login" type="text" class="form-control" name="login"
-                                        value="{{ old('mobile') ?: old('email') }}" required autofocus>
+                                        value="ziyad19@yahoo.com" required autofocus>
 
                                     @if ($errors->has('mobile') || $errors->has('email'))
                                         <span class="invalid-feedback">
@@ -40,7 +40,7 @@
                                 <div class="col-md-6">
                                     <input id="password" type="password"
                                         class="form-control @error('password') is-invalid @enderror" name="password"
-                                        required autocomplete="current-password">
+                                        required autocomplete="current-password" value="13131313">
 
                                     @error('password')
                                         <span class="invalid-feedback" role="alert">
