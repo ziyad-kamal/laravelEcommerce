@@ -17,7 +17,6 @@ class CategoryController extends Controller
         } catch (\Exception $ex) {
             return Redirect::to('category/get')->with(['error'=>'something went wrong']);
         }
-        
     }
 
     public function show(int $id)

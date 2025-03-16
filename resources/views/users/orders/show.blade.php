@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('header')
-<title>{{ env('APP_NAME',  'orders - zikolaravelecommerce') }}</title>
-<meta name="keywords" content="here you can see your orders in zikolaravelecommerce" >
+<title>{{ env('APP_NAME',  'orders - eCommerce') }}</title>
+<meta name="keywords" content="here you can see your orders in eCommerce" >
 <link rel="stylesheet" href="{{asset('css/users/orders.css')}}">
 @endsection
 

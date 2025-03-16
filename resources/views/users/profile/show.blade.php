@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('header')
-<title>{{ env('APP_NAME', Auth::user()->name . ' - zikolaravelecommerce') }}</title>
-<meta name="keywords" content="here you can see your profile details in zikolaravelecommerce" >
+<title>{{ env('APP_NAME', Auth::user()->name . ' - eCommerce') }}</title>
+<meta name="keywords" content="here you can see your profile details in eCommerce" >
 <link href="{{ asset('css/users/profile.css') }}" rel="stylesheet">
 @endsection
 

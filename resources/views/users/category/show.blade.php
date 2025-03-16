@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('header')
-    <title>{{ env('APP_NAME',$category->name . ' - items - zikolaravelecommerce') }}</title>
+    <title>{{ env('APP_NAME',$category->name . ' - items - eCommerce') }}</title>
     <meta name="keywords" content="here you can all items related to this category" >
     <link rel="stylesheet" href="{{asset('css/users/category/show.css')}}">
 @endsection

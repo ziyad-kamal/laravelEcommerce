@@ -24,7 +24,7 @@ Route::group(['prefix'=>'admins','namespace'=>'admins','middleware'=>'auth:admin
     Route::post('/update/{id}'     , 'AdminsController@update');
 });
 
-########################      category multilanguage            ###############################
+########################      category multiLanguage            ###############################
 //lang_prefix and adminsMiddleware autoload from app\helpers\admins
 Route::group(['prefix'=> lang_prefix().'/admins/category' ,'namespace'=>'admins',
             'middleware'=>adminsMiddleware()], function () {

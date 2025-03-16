@@ -1,5 +1,6 @@
 <?php
 use Illuminate\Support\Facades\Config;
+use Mcamara\LaravelLocalization\Facades\LaravelLocalization;
 
 
 function show_language(){

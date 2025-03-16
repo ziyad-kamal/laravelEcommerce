@@ -1,9 +1,9 @@
 @extends('layouts.items_app')
 
 @section('header')
-    <title>{{ env('APP_NAME', 'items - zikolaravelecommerce') }}</title>
+    <title>{{ env('APP_NAME', 'items - eCommerce') }}</title>
     <meta name="keywords"
-        content="enjoy shopping, buy products by one click, you can find top brands at low prices in zikolaravelecommerce">
+        content="enjoy shopping, buy products by one click, you can find top brands at low prices in eCommerce">
     <link href="{{ asset('css/users/items/show.css') }}" rel="stylesheet">
 @endsection
 
