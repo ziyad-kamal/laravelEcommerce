@@ -86,7 +86,7 @@ class ItemsTest extends TestCase
             '_token' => csrf_token(),
             'search' => 'iphone',
             'brands' => [1],
-            'agax'   => 1
+            'ajax'   => 1
         ];
 
         $response=$this->post('items/get?page=2',$data);
@@ -107,7 +107,7 @@ class ItemsTest extends TestCase
             ]);
         }
 
-        $response=$this->call('GET','items/details/iphone-12-1?page=2',['agax'=>1]);
+        $response=$this->call('GET','items/details/iphone-12-1?page=2',['ajax'=>1]);
         
         $response->assertJson(['html'=>true]);
         $response->assertSee('bad');

@@ -38,7 +38,7 @@
     <div class="card mb-3 card_item " >
         <div class="row no-gutters">
             <div class="col-md-4">
-                <img src={{ asset('images/items/' . $item->photo) }} class="card-img" alt="..." />
+                <img src="{{ asset('images/items/' . $item->photo) }}" class="card-img" alt="..." />
             </div>
             <div class="col-md-8">
                 <ul class="list-group">
@@ -137,7 +137,7 @@
                 type: "get",
                 url : '?page='+page,   
                 data: {
-                    'agax':1
+                    'ajax':1
                 },
                 beforeSend:function(){
                     $('#load').show()
@@ -163,7 +163,7 @@
             }
         });
         
-        //agax checkout 
+        //ajax checkout 
         let buy=$('#buy')
         buy.on('click',function(e){
             e.preventDefault();

@@ -12,31 +12,31 @@
 
 .status-details{
     margin-right: 38px;
-    color       : #2ecc71;
+    color       : var(--third_color);
     font-weight : bold;
 }
 
 .price-details{
     margin-right: 44px;
-    color       : #2ecc71;
+    color       : var(--third_color);
     font-weight : bold;
 }
 
 .date-details{
     margin-right: 48px;
-    color       : #2ecc71;
+    color       : var(--third_color);
     font-weight : bold;
 }
 
 .name{
     margin-right: 42px;
-    color       : #2ecc71;
+    color       : var(--third_color);
     font-weight : bold;
 }
 
 .description{
     
-    color      : #2ecc71;
+    color       : var(--third_color);
     font-weight: bold;
 }
 
@@ -120,7 +120,20 @@ img{
     margin-top: 100px;
 }
 
+.list-group-item.active {
+    background-color: var(--secondary_color) !important;
+    border-color: var(--secondary_color) !important;
+}
 
+.btn-primary {
+    background-color: var(--secondary_color) !important;
+    border-color: var(--secondary_color) !important;
+}
+
+.btn-success {
+    background-color: var(--secondary_color) !important;
+    border-color: var(--secondary_color) !important;
+}
 
 
 

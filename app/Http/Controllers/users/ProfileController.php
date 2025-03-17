@@ -58,7 +58,7 @@ class ProfileController extends Controller
     public function updatePhoto(ProfileRequest $request)
     {
         try {
-            $fileName=$this->uploadphoto($request,'images/users');
+            $fileName=$this->uploadPhoto($request,'images/users');
 
             $filtered_data=$this->filter_req_photo($fileName);
 

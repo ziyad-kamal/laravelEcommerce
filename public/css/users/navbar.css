@@ -1,6 +1,13 @@
 :root{
-    --main_color : rgba(29,161,242,1.00);
+    --main_color : #800080;
     --white_color: #fff;
+    --secondary_color: #b62b9c;
+    --third_color: #d12eb3;
+}
+
+.btn:focus{
+    background-color: var(--secondary_color) !important;
+    border-color: var(--secondary_color) !important;
 }
 
 .navbar {

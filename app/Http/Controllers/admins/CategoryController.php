@@ -37,13 +37,13 @@ class CategoryController extends Controller
             $category=$request->category;
             $defualt_category=$this->getDefault($category);
 
-            $filterd_data=$this->filter_req_category($defualt_category);
+            $filtered_data=$this->filter_req_category($defualt_category);
 
             $defualt_category_id=Category::insertGetId([
                 'translation_lang' => $defualt_category['abbr'],
                 'translation_of'   => 0,
-                'name'             => $filterd_data['name'],
-                'description'      => $filterd_data['description'],
+                'name'             => $filtered_data['name'],
+                'description'      => $filtered_data['description'],
             ]);
     
             $otherCategories=$this->getOther($category);
@@ -51,13 +51,13 @@ class CategoryController extends Controller
             if(isset($otherCategories)){
                 $otherCategories_arr=[];
                 foreach($otherCategories as $othercategory){
-                    $filterd_data=$this->filter_req_category($othercategory);
+                    $filtered_data=$this->filter_req_category($othercategory);
 
                     $otherCategories_arr[]=[
                         'translation_lang' => $othercategory['abbr'],
                         'translation_of'   => $defualt_category_id,
-                        'name'             => $filterd_data['name'],
-                        'description'      => $filterd_data['description'],
+                        'name'             => $filtered_data['name'],
+                        'description'      => $filtered_data['description'],
                     ];
                 }
                 
@@ -102,11 +102,11 @@ class CategoryController extends Controller
             return redirect()->back()->with(['error'=>__("messages.this category isn't found")]);
         }
 
-        $filterd_data=$this->filter_req_category($main_category);
+        $filtered_data=$this->filter_req_category($main_category);
 
         Category::where('id',$id)->update([
-            'name'        => $filterd_data['name'],
-            'description' => $filterd_data['description'],
+            'name'        => $filtered_data['name'],
+            'description' => $filtered_data['description'],
         ]);
 
         return redirect()->back()->with(['success'=>__('messages.you updated category successfully')]);
@@ -128,13 +128,13 @@ class CategoryController extends Controller
         try {
             $category=(array)$request->category;
             
-            $filterd_data=$this->filter_req_category($category);
+            $filtered_data=$this->filter_req_category($category);
 
             Category::create([
                 'translation_lang' => $category[0]['translation_lang'],
                 'translation_of'   => $category[0]['category_id'],
-                'name'             => $filterd_data['name'],
-                'description'      => $filterd_data['description'],
+                'name'             => $filtered_data['name'],
+                'description'      => $filtered_data['description'],
             ]);
     
             return redirect()->back()->with(['success'=>'you added successfully new language for this category']);

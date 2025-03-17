@@ -5,28 +5,29 @@ namespace App\Traits;
 use App\Models\Items;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\DB;
 
 trait Search_filter
 {
     public function search(Request $request):null|string
     {
-        $search=$request->has('search')  ? $request->get('search')   :null;
+        $search=$request->has('search')  ? $request->get('search') :null;
         return $search;
     }
 
-    public function filter_data(string $price=null,int $selected_category=null,array $selected_brands=[],string $search=null):LengthAwarePaginator
+    public function filter_data(string $price,int $selected_category,array $selected_brands,string $search=null):LengthAwarePaginator
     {
-        $items    = Items::with(['category','brands']);
+        $items = Items::query();
 
         if ($search != null) {
             $items = $items->search($search);
         }
 
-        if ($selected_category != null) {
+        if ($selected_category != 0) {
             $items = $items->where('category_id', $selected_category);
         }
 
-        if ($price != null) {
+        if ($price != '') {
             $items = $items->when($price, function ($q) use ($price) {
                 if ($price == "price_0_500") {
                     $q->whereBetween('price', [0, 500]);
@@ -47,10 +48,10 @@ trait Search_filter
         }
 
         if(count($selected_brands) > 0){
-            $items=Items::whereIn('brand_id',$selected_brands);
+            $items= $items->whereIn('brand_id', $selected_brands);
         }
 
-        $items = $items->orderBy('id','desc')->paginate(2);
+        $items = $items->orderBy('id','desc')->paginate(6);
 
         return $items;
     }

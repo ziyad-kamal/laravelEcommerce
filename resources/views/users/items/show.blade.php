@@ -52,7 +52,7 @@
                     @foreach ($category as $cate)
                         <div class="form-check">
                             <label class="form-check-label">
-                                <input type="radio" class="form-check-input" name="category" id="category"
+                                <input type="radio" class="form-check-input" name="selected_category" id="category"
                                     value="{{ $cate->id }}"
                                     {{ isset($selected_category) && $selected_category == $cate->id ? 'checked' : '' }}>{{ $cate->name }}
                             </label>
@@ -92,11 +92,6 @@
         </div>
     </div>
 
-    <div id="load" style="margin-top: 30px" class="text-center" style="display: none">
-        <img  src="{{ asset('images/items/200.gif') }}" />
-        
-    </div>
-
 @endsection
 @section('script')
     <script>
@@ -107,22 +102,19 @@
                     let res=JSON.parse(this.responseText);
                     let html=res.html;
                     let items=res.items.data
-                    let load=document.getElementById('load');
-                    
+
                     if(html == "<div class=\"row\">\r\n<\/div>\r\n\r\n\r\n"){
-                        load.textContent='no more items';
                         return;
                     }
                     
                     let more_items=document.getElementById('more_items');
                     more_items.insertAdjacentHTML('beforeend',html);
-                    load.style.display='none';
 
                     for (let i = 0; i < items.length; i++) {
                         var items_id          = items[i].id,
                             item_rate         = items[i].rate,
-                            item_rate_perc    = (item_rate/5)*100,
-                            item_rate_rounded = Math.round(item_rate_perc)+'%';
+                            item_rate_percent = (item_rate/5)*100,
+                            item_rate_rounded = Math.round(item_rate_percent)+'%';
             
                         document.querySelector('.id'+items_id).style.width=item_rate_rounded;
                     }
@@ -130,7 +122,7 @@
             }
             let filter_form=document.getElementById('filter_form');
             let formData=new FormData(filter_form);
-            formData.append('agax',1)
+            formData.append('ajax',1)
 
             Items_request.open('post','?page='+page);
             Items_request.send(formData)
@@ -139,10 +131,10 @@
         let page=1
         window.onscroll=function(){
             if(window.scrollY+ window.innerHeight >= document.body.clientHeight){
-                document.getElementById('load').style.display='';
                 page++;
                 loadMore(page);
             }
+            
         }
 
         

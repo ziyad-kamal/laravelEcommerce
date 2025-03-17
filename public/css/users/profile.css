@@ -21,6 +21,26 @@
     
 }
 
+.btn-info{
+    background-color: var(--secondary_color);
+    border-color: var(--secondary_color);
+}
+
+.btn-info:hover{
+    background-color: var(--third_color);
+    border-color: var(--third_color);
+}
+
+.bg-dark{
+    background-color: var(--secondary_color)!important;
+    border-color: var(--secondary_color);
+}
+
+.list-group-item.active {
+    background-color: var(--secondary_color) !important;
+    border-color: var(--secondary_color) !important;
+}
+
 .card_profile{
     margin    : auto;
     width: 36rem;

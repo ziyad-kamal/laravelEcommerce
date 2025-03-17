@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use App\Traits\FiltersRequests\FilterReqItems;
 use Cviebrock\EloquentSluggable\Services\SlugService;
+use Illuminate\Http\JsonResponse;
 
 class ItemsController extends Controller
 {
@@ -35,17 +36,17 @@ class ItemsController extends Controller
     ####################################      store      ################################
     public function store(ItemRequest $request):RedirectResponse
     {
-        $file_name = $this->uploadphoto($request, 'images/items');
+        $file_name = $this->uploadPhoto($request, 'images/items');
 
-        $fiterd_data=$this->filter_req_items($request,$file_name);
+        $filtered_data=$this->filter_req_items($request,$file_name);
 
         Items::create([
-            'name'        => $fiterd_data['name'] ,
-            'slug'        => SlugService::createSlug(Items::class,'slug',$fiterd_data['name'] ),
-            'description' => $fiterd_data['description'],
-            'condition'   => $fiterd_data['condition'],
-            'price'       => $fiterd_data['price'],
-            'photo'       => $fiterd_data['file_name'],
+            'name'        => $filtered_data['name'] ,
+            'slug'        => SlugService::createSlug(Items::class,'slug',$filtered_data['name'] ),
+            'description' => $filtered_data['description'],
+            'condition'   => $filtered_data['condition'],
+            'price'       => $filtered_data['price'],
+            'photo'       => $filtered_data['file_name'],
             'date'        => now(),
             'admin_id'    => Auth::user()->id,
             'category_id' => $request->get('category_id'),
@@ -56,7 +57,7 @@ class ItemsController extends Controller
     }
 
     ####################################     edit        ################################
-    public function edit(int $id):View
+    public function edit(int $id):View|RedirectResponse
     {
         $items=Items::find($id);
         if (!$items) {
@@ -70,29 +71,29 @@ class ItemsController extends Controller
     }
 
     ####################################     update      ################################
-    public function update(int $id,ItemRequest $request):RedirectResponse
+    public function update(int $id,ItemRequest $request):RedirectResponse|JsonResponse
     {
         try {
             if ($request->file('photo')) {
                 //import from traits uploadImage
-                $file_name = $this->uploadphoto($request, 'images/items');
+                $file_name = $this->uploadPhoto($request, 'images/items');
             } else {
                 $file_name = $request->get('filename');
             }
 
-            $fiterd_data=$this->filter_req_items($request,$file_name);
+            $filtered_data=$this->filter_req_items($request,$file_name);
 
             $item              = Items::find($request->id);
             if(! $item){
                 return response()->json(['error'=>'item not found'],404);
             }
 
-            $item->name        = $fiterd_data['name'];
-            $item->description = $fiterd_data['description'];
-            $item->condition   = $fiterd_data['condition'];
-            $item->price       = $fiterd_data['price'];
+            $item->name        = $filtered_data['name'];
+            $item->description = $filtered_data['description'];
+            $item->condition   = $filtered_data['condition'];
+            $item->price       = $filtered_data['price'];
             $item->category_id = $request->get('category_id');
-            $item->photo       = $fiterd_data['file_name'];
+            $item->photo       = $filtered_data['file_name'];
 
             $item->save();
 

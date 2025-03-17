@@ -10,7 +10,7 @@
     <table class="table table-striped">
         <thead class="bg-info">
             <tr>
-                <th scope="col">category number</th>
+                <th scope="col">#</th>
                 <th scope="col">name</th>
                 <th scope="col">photo</th>
 
@@ -23,7 +23,7 @@
                     <td>
                         <a href="{{url('category/show/items/'.$category->id)}}" style="font-weight: bold"> {{ $category->name }} </a>
                     </td>
-                    <td><img src="{{asset('images/category/'.$category->photo)}}" alt=""></td>
+                    <td><img src="{{asset('images/category/'.$category->photo)}}" width="300px" alt=""></td>
                 </tr>
             @endforeach
 

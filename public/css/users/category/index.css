@@ -5,6 +5,11 @@
     left: 7%;
 }
 
+.bg-info{
+    background-color: var(--secondary_color) !important;
+    color: var(--white_color) !important;
+}
+
 @media(max-width:776){
     .table{
         left: 4%;

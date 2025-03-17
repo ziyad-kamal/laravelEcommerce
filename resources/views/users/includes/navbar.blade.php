@@ -138,9 +138,9 @@
             
             //ajax get notifications
             function notify(){
-                let agaxRequest=new XMLHttpRequest();
+                let ajaxRequest=new XMLHttpRequest();
                 
-                agaxRequest.onreadystatechange=function(){
+                ajaxRequest.onreadystatechange=function(){
                     if(this.readyState == 4 && this.status == 200){
                         let res=JSON.parse(this.responseText);
                         let notifications_count= res.notifications_not_readed_count;
@@ -175,8 +175,8 @@
                     }
                 }
                 
-                agaxRequest.open('GET',"{{url('notifications/show')}}");
-                agaxRequest.send();
+                ajaxRequest.open('GET',"{{url('notifications/show')}}");
+                ajaxRequest.send();
             }
 
 

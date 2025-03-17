@@ -146,3 +146,23 @@ h4 .condition{
 .alert{
     margin-top: 100px;
 }
+
+.btn-primary{
+    background-color: var(--secondary_color);
+    border-color: var(--secondary_color);
+}
+
+.btn-primary:hover{
+    background-color: var(--third_color);
+    border-color: var(--third_color);
+}
+
+.btn-success{
+    background-color: var(--secondary_color);
+    border-color: var(--secondary_color);
+}
+
+.btn-success:hover{
+    background-color: var(--third_color);
+    border-color: var(--third_color);
+}
